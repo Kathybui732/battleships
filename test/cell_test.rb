@@ -9,6 +9,7 @@ class CellTest < Minitest::Test
   def setup
     @cell = Cell.new("B4")
     @cruiser = Ship.new("Cruiser", 3)
+    @cell_2 = Cell.new("C3")
   end
 
   def test_cell_exists
@@ -34,7 +35,6 @@ class CellTest < Minitest::Test
   end
 
   def test_is_it_fired_upon
-    require "pry"; binding.pry
     @cell.place_ship(@cruiser)
     refute @cell.fired_upon?
   end
@@ -44,5 +44,9 @@ class CellTest < Minitest::Test
     @cell.fire_upon
     assert_equal 2, @cell.ship.health
     assert @cell.fired_upon?
+  end
+
+  def test_it_can_render
+    assert_equal ".", @cell.render
   end
 end
