@@ -34,13 +34,15 @@ class CellTest < Minitest::Test
   end
 
   def test_is_it_fired_upon
+    require "pry"; binding.pry
     @cell.place_ship(@cruiser)
     refute @cell.fired_upon?
   end
 
   def test_it_can_fire_upon
+    @cell.place_ship(@cruiser)
     @cell.fire_upon
     assert_equal 2, @cell.ship.health
-    assert @cell.fire_upon?
+    assert @cell.fired_upon?
   end
 end
