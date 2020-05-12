@@ -25,7 +25,21 @@ class ShipTest < Minitest::Test
     assert_equal 3, @cruiser.health
   end
 
-  def test_sunk?
+  def test_it_starts_not_sunk?
     assert_equal false, @cruiser.sunk?
+  end
+
+  def test_it_can_hit
+    require "pry"; binding.pry
+    @cruiser.hit
+    assert_equal 2, @cruiser.health
+
+    @cruiser.hit
+    assert_equal 1, @cruiser.health
+    assert_equal false, @cruiser.sunk?
+
+    @cruiser.hit
+    assert_equal 0, @cruiser.health
+    assert_equal true, @cruiser.sunk?
   end
 end
