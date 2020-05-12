@@ -33,4 +33,8 @@ class CellTest < Minitest::Test
     assert_equal @cruiser, @cell.ship
   end
 
+  def test_it_can_fire_upon
+    @cell.place_ship(@cruiser)
+    refute @cell.fired_upon?
+  end
 end
