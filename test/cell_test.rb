@@ -12,7 +12,6 @@ class CellTest < Minitest::Test
   end
 
   def test_cell_exists
-    require "pry"; binding.pry
     assert_instance_of Cell, @cell
   end
 
@@ -25,7 +24,13 @@ class CellTest < Minitest::Test
   end
 
   def test_cell_is_empty
+    # skip
     assert @cell.empty?
+  end
+
+  def test_it_can_place_ship
+    @cell.place_ship(@cruiser)
+    assert_equal @cruiser, @cell.ship
   end
 
 end
