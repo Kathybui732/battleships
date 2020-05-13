@@ -49,4 +49,27 @@ class CellTest < Minitest::Test
   def test_it_can_render
     assert_equal ".", @cell.render
   end
+
+  def test_it_can_change_render_when_fire_upon
+    @cell.fire_upon
+    assert_equal "M", @cell.render
+  end
+
+  # Need to go back to optional boolean!!!
+  def test_it_can_place_another_ship
+    @cell_2.place_ship(@cruiser)
+    assert_equal "S", @cell_2.render
+  end
+
+  #Ask about the cruiser.hit in interaction pattern
+  def test_it_sinks_after_3_fire_upons
+    @cell_2.place_ship(@cruiser)
+    @cell_2.fire_upon
+    assert_equal "H", @cell_2.render
+    refute @cruiser.sunk?
+    @cruiser.hit
+    @cruiser.hit
+    assert @cruiser.sunk?
+    assert_equal "X", @cell_2.render
+  end
 end

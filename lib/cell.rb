@@ -1,5 +1,5 @@
 class Cell
-  attr_reader :coordinate, :ship, :render
+  attr_reader :coordinate, :ship
 
   def initialize(coordinate, ship = nil)
     @coordinate = coordinate
@@ -20,14 +20,22 @@ class Cell
     @render == "X" || @render == "H"
   end
 
-  def fire_upon
-    if @render == "S" && @ship.health == 1
+  def render
+    if @render == "H" && @ship.health == 0
       @render = "X"
-      @ship.hit
-    elsif @render == "S"
-      @render = "H"
-      @ship.hit
     else
+      @render
+    end
+  end
+
+  def fire_upon
+    if @render == "S" && @ship.health < 1
+      @ship.hit
+      @render = "X"
+    elsif @render == "S"
+      @ship.hit
+      @render = "H"
+    elsif @render = "."
       @render = "M"
     end
   end
