@@ -25,7 +25,6 @@ class CellTest < Minitest::Test
   end
 
   def test_cell_is_empty
-    # skip
     assert @cell.empty?
   end
 
@@ -42,6 +41,7 @@ class CellTest < Minitest::Test
   def test_it_can_fire_upon
     @cell.place_ship(@cruiser)
     @cell.fire_upon
+
     assert_equal 2, @cell.ship.health
     assert @cell.fired_upon?
   end
@@ -61,7 +61,6 @@ class CellTest < Minitest::Test
     assert_equal "S", @cell_2.render
   end
 
-  #Ask about the cruiser.hit in interaction pattern
   def test_it_sinks_after_3_fire_upons
     @cell_2.place_ship(@cruiser)
     @cell_2.fire_upon
