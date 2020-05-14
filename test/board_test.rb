@@ -8,6 +8,8 @@ require "pry"
 class BoardTest < Minitest::Test
   def setup
     @board = Board.new
+    @cruiser = Ship.new("Cruiser", 3)
+    @sub = Ship.new("Submarine", 2)
   end
 
   def test_it_exists
@@ -17,5 +19,17 @@ class BoardTest < Minitest::Test
   def test_board_has_cells
     assert_equal Hash, @board.cells.class
     assert_equal 16, @board.cells.count
+  end
+
+  def test_is_has_valid_coordinate
+    assert @board.valid_coordinate?("A1")
+    assert @board.valid_coordinate?("D4")
+    refute @board.valid_coordinate?("A5")
+    refute @board.valid_coordinate?("E1")
+    refute @board.valid_coordinate?("A22")
+  end
+
+  def test_it_has_valid_placement
+    
   end
 end
