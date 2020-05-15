@@ -37,7 +37,7 @@ class BoardTest < Minitest::Test
   end
 
   def test_valid_placement_is_consecutive
-    skip
+    # skip
     assert_equal false, @board.valid_placement?(@cruiser, ["A1", "A2", "A4"])
     assert_equal false, @board.valid_placement?(@sub, ["A1", "C1"])
     assert_equal false, @board.valid_placement?(@cruiser, ["A3", "A2", "A1"])
@@ -46,22 +46,41 @@ class BoardTest < Minitest::Test
     assert_equal true, @board.valid_placement?(@cruiser, ["C1", "C2", "C3"])
   end
 
-  def test_it_has_valid_number_coordinates
-    skip
-    assert_equal [["1", "2", "3"], ["2", "3", "4"]], @board.number_placement(@cruiser)
-    assert_equal [["1", "2"], ["2", "3"], ["3", "4"]], @board.number_placement(@sub)
+  def test_valid_number_coordinates_for_cruiser
+    @board.valid_placement?(@cruiser, ["A1", "A2", "A3"])
+    assert_equal [["1", "2", "3"], ["2", "3", "4"]], @board.number_coordinates
   end
 
-  def test_it_has_valid_letter_coordinates
-    skip
-    assert_equal [["A", "B", "C"], ["B", "C", "D"]], @board.letter_coordinates(@cruiser)
-    assert_equal [["A", "B"], ["B", "C"], ["C", "D"]], @board.letter_coordinates(@sub)
+  def test_valid_number_coordinates_for_sub
+    @board.valid_placement?(@sub, ["A1", "B1"])
+    assert_equal [["1", "2"], ["2", "3"], ["3", "4"]], @board.number_coordinates
   end
 
-  def test_it_can_generate_valid_ship_coordinates
-    expected_sub = [["A1", "A2"], ["A2", "A3"], ["A3", "A4"], ["B1", "B2"], ["B2", "B3"], ["B3", "B4"], ["C1", "C2"], ["C2", "C3"], ["C3", "C4"], ["D1", "D2"], ["D2", "D3"], ["D3", "D4"], ["A1", "B1"], ["B1", "C1"], ["C1", "D1"], ["A2", "B2"], ["B2", "C2"], ["C2", "D2"], ["A3", "B3"], ["B3", "C3"], ["C3", "D3"], ["A4", "B4"], ["B4", "C4"], ["C4", "D4"]]
-    expected_cruiser = [["A1", "A2", "A3"], ["A2", "A3", "A4"], ["B1", "B2", "B3"], ["B2", "B3", "B4"], ["C1", "C2", "C3"], ["C2", "C3", "C4"], ["D1", "D2", "D3"], ["D2", "D3", "D4"], ["A1", "B1", "C1"], ["B1", "C1", "D1"], ["A2", "B2", "C2"], ["B2", "C2", "D2"], ["A3", "B3", "C3"], ["B3", "C3", "D3"], ["A4", "B4", "C4"], ["B4", "C4", "D4"]]
-    assert_equal expected_sub, @board.valid_ship_coordinates(@sub)
-    assert_equal expected_cruiser, @board.valid_ship_coordinates(@cruiser)
+  def test_valid_letter_coordinates_for_cruiser
+    @board.valid_placement?(@cruiser, ["A1", "A2", "A3"])
+    assert_equal [["A", "B", "C"], ["B", "C", "D"]], @board.letter_coordinates
+  end
+
+  def test_valid_letter_coordinates_for_sub
+    @board.valid_placement?(@sub, ["A1", "A2"])
+    assert_equal [["A", "B"], ["B", "C"], ["C", "D"]], @board.letter_coordinates
+  end
+
+  def test_it_can_generate_valid_ship_coordinates_for_cruiser
+    # skip
+    @board.valid_placement?(@cruiser, ["A1", "A2", "A3"])
+    @board.number_coordinates
+    @board.letter_coordinates
+    expected_cruiser = [["A1", "A2", "A3"], ["A2", "A3", "A4"], ["B1", "B2", "B3"], ["B2", "B3", "B4"], ["C1", "C2", "C3"], ["C2", "C3", "C4"], ["D1", "D2", "D3"], ["D2", "D3", "D4"], ["A1", "B1", "C1"], ["A2", "B2", "C2"], ["A3", "B3", "C3"], ["A4", "B4", "C4"], ["B1", "C1", "D1"], ["B2", "C2", "D2"], ["B3", "C3", "D3"], ["B4", "C4", "D4"]]
+    assert_equal expected_cruiser, @board.ship_coordinates
+  end
+
+  def test_it_can_generate_valid_ship_coordinates_for_sub
+    # skip
+    @board.valid_placement?(@sub, ["A1", "A2"])
+    @board.number_coordinates
+    @board.letter_coordinates
+    expected_sub = [["A1", "A2"], ["A2", "A3"], ["A3", "A4"], ["B1", "B2"], ["B2", "B3"], ["B3", "B4"], ["C1", "C2"], ["C2", "C3"], ["C3", "C4"], ["D1", "D2"], ["D2", "D3"], ["D3", "D4"], ["A1", "B1"], ["A2", "B2"], ["A3", "B3"], ["A4", "B4"], ["B1", "C1"], ["B2", "C2"], ["B3", "C3"], ["B4", "C4"], ["C1", "D1"], ["C2", "D2"], ["C3", "D3"], ["C4", "D4"]]
+    assert_equal expected_sub, @board.ship_coordinates
   end
 end
