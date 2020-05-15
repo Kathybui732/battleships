@@ -3,7 +3,7 @@ require "./lib/cell"
 
 class Board
   attr_reader :cells
-  def initialize
+  def initialize(board_size = 4)
     @cells = {
       "A1" => Cell.new("A1"),
       "A2" => Cell.new("A2"),
@@ -22,6 +22,12 @@ class Board
       "D3" => Cell.new("D3"),
       "D4" => Cell.new("D4"),
     }
+    @board_size = board_size
+    @ship_length = nil
+    @input_coords = nil
+    @valid_number_coordinates = []
+    @valid_letter_coordinates = []
+    @valid_ship_coordinates = []
   end
 
   def valid_coordinate?(coordinate)
@@ -29,6 +35,52 @@ class Board
   end
 
   def valid_placement?(ship, coordinates)
-    coordinates.length == ship.length
+    @ship_length = ship.length
+    @input_coords = coordinates
+    coordinates.length == ship.length && is_coordinates_valid?
+  end
+
+  def number_coordinates
+    coordinates = []
+    (1..@board_size).each_cons(@ship_length)do |array|
+      coordinates << array
+    end
+    coordinates.each do |array|
+      @valid_number_coordinates << array.map do |number|
+        number.to_s
+      end
+    end
+    @valid_number_coordinates
+  end
+
+  def letter_coordinates
+    letter_ord = (64 + @board_size).chr
+    ("A"..letter_ord).each_cons(@ship_length) do |letter|
+      @valid_letter_coordinates << letter
+    end
+    @valid_letter_coordinates
+  end
+
+  def ship_coordinates
+    letter_ord = (64 + @board_size).chr
+    letters = ("A"..letter_ord).to_a.zip
+    numbers = ("1"..@board_size.to_s).to_a.zip
+    letters.each do |letter|
+      @valid_number_coordinates.each do |array|
+        @valid_ship_coordinates << letter.product(array).collect { |x,y| x + y }
+      end
+    end
+    @valid_letter_coordinates.each do |array|
+      numbers.each do |number|
+        @valid_ship_coordinates << array.product(number).collect { |x,y| x + y }
+      end
+    end
+    return @valid_ship_coordinates
+  end
+
+  def is_coordinates_valid?
+    @valid_ship_coordinates.any? do |coordinates|
+      coordinates == @input_coords
+    end
   end
 end
