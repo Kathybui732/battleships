@@ -2,7 +2,7 @@ require "pry"
 require "./lib/cell"
 
 class Board
-  attr_reader :cells
+  attr_reader :cells, :ship_length, :input_coords
   def initialize(board_size = 4)
     @cells = {
       "A1" => Cell.new("A1"),
@@ -37,7 +37,12 @@ class Board
   def valid_placement?(ship, coordinates)
     @ship_length = ship.length
     @input_coords = coordinates
-    coordinates.length == ship.length && is_coordinates_valid?
+
+    is_valid = @valid_ship_coordinates.any? do |coords|
+      coords == @input_coords
+    end
+
+    coordinates.length == ship.length && is_valid
   end
 
   def number_coordinates
@@ -76,11 +81,5 @@ class Board
       end
     end
     return @valid_ship_coordinates
-  end
-
-  def is_coordinates_valid?
-    @valid_ship_coordinates.any? do |coordinates|
-      coordinates == @input_coords
-    end
   end
 end
