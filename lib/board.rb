@@ -82,4 +82,10 @@ class Board
     end
     return @valid_ship_coordinates
   end
+
+  def place(ship, coordinates)
+    coordinates.each do |cell|
+      cell.place_ship(ship)
+    end
+  end
 end
