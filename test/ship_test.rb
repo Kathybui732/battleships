@@ -30,7 +30,6 @@ class ShipTest < Minitest::Test
   end
 
   def test_it_can_hit
-    require "pry"; binding.pry
     @cruiser.hit
     assert_equal 2, @cruiser.health
 

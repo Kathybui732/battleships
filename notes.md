@@ -8,3 +8,4 @@
 - M = miss
 - S = where ship is located
 - X = sunken ship, all S's must get hit
+- . = empty space??
