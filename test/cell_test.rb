@@ -25,7 +25,7 @@ class CellTest < Minitest::Test
   end
 
   def test_cell_is_empty
-    assert @cell.empty?
+    assert_equal true, @cell.empty?
   end
 
   def test_it_can_place_ship
@@ -35,7 +35,7 @@ class CellTest < Minitest::Test
 
   def test_is_it_fired_upon
     @cell.place_ship(@cruiser)
-    refute @cell.fired_upon?
+    assert_equal false, @cell.fired_upon?
   end
 
   def test_it_can_fire_upon
@@ -43,7 +43,7 @@ class CellTest < Minitest::Test
     @cell.fire_upon
 
     assert_equal 2, @cell.ship.health
-    assert @cell.fired_upon?
+    assert_equal true, @cell.fired_upon?
   end
 
   def test_it_can_render
@@ -65,10 +65,10 @@ class CellTest < Minitest::Test
     @cell_2.place_ship(@cruiser)
     @cell_2.fire_upon
     assert_equal "H", @cell_2.render
-    refute @cruiser.sunk?
+    assert_equal false, @cruiser.sunk?
     @cruiser.hit
     @cruiser.hit
-    assert @cruiser.sunk?
+    assert_equal true, @cruiser.sunk?
     assert_equal "X", @cell_2.render
   end
 end
