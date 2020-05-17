@@ -26,6 +26,8 @@ class Cell
   def render
     if fired_upon? && @render == "H" && @ship.health == 0
       @render = "X"
+    elsif fired_upon? && @render == "S" && @ship.sunk?
+      @render = "X"
     elsif fired_upon? && @render == "S"
       @render = "H"
     elsif fired_upon? && @render == "."
