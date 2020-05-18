@@ -34,8 +34,8 @@ class Board
     @cells.include?(coordinate)
   end
 
-  def create_ship(name, length)
-    @ship_length = length
+  def create_board(ship_length)
+    @ship_length = ship_length
   end
 
   def valid_placement?(ship, coordinates)
@@ -52,13 +52,8 @@ class Board
 
   def number_coordinates
     coordinates = []
-    (1..@board_size).each_cons(@ship_length)do |array|
-      coordinates << array
-    end
-    coordinates.each do |array|
-      @valid_number_coordinates << array.map do |number|
-        number.to_s
-      end
+    ("1"..@board_size.to_s).each_cons(@ship_length)do |array|
+      @valid_number_coordinates << array
     end
     @valid_number_coordinates
   end
