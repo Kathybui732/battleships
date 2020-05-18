@@ -9,20 +9,10 @@ class Starter
   end
 
   def calibrate_board_for_ships(length_1, length_2)
-    @cpu_board.create_board(length_1)
-    @cpu_board.number_coordinates
-    @cpu_board.letter_coordinates
-    @cpu_board.create_board(length_2)
-    @cpu_board.number_coordinates
-    @cpu_board.letter_coordinates
-    @cpu_board.ship_coordinates
-    @player_board.create_board(length_1)
-    @player_board.number_coordinates
-    @player_board.letter_coordinates
-    @player_board.create_board(length_2)
-    @player_board.number_coordinates
-    @player_board.letter_coordinates
-    @player_board.ship_coordinates
+    @cpu_board.ship_coordinates(length_1)
+    @cpu_board.ship_coordinates(length_2)
+    @player_board.ship_coordinates(length_1)
+    @player_board.ship_coordinates(length_2)
   end
 
   def cpu_first_placement(ship, length)
