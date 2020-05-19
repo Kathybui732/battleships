@@ -81,6 +81,9 @@ class Starter
     @cpu_board.ship_coordinates(length_2)
     @player_board.ship_coordinates(length_1)
     @player_board.ship_coordinates(length_2)
+  end
+
+  def create_valid_cells
     @valid_player_cells = @player_board.valid_ship_coordinates.flatten.uniq!
     @valid_cells = @cpu_board.valid_ship_coordinates.flatten.uniq!
   end
@@ -94,14 +97,13 @@ class Starter
   end
 
   def cpu_second_placement(ship, length)
-    second_placement = @cpu_board.valid_ship_coordinates.map do |array|
-      array.reject do |element|
-        element.include?(@placement_1[0]) || element.include?(@placement_1[1]) || element.include?(@placement_1[2])
-      end
+    size_array = @cpu_board.valid_ship_coordinates.select do |array|
+      array.count == length
     end
-    @placement_2 = second_placement.select do |coords|
-      coords.count == length
-    end.sample(1).flatten!
+    valid_placement = size_array.select do |array|
+      array.length == 2 && @cpu_board.cells[array[0]].empty? && @cpu_board.cells[array[1]]
+    end
+    @placement_2 = valid_placement.sample(1).flatten!
     @cpu_board.place(ship, @placement_2)
   end
 
@@ -117,7 +119,7 @@ class Starter
 
   def print_boards
     puts "=============COMPUTER BOARD============="
-    puts @cpu_board.render
+    puts @cpu_board.render(true)
     puts "==============PLAYER BOARD=============="
     puts @player_board.render(true)
   end
@@ -181,8 +183,9 @@ class Starter
     create_ship_1("Cruiser", 3)
     create_ship_2("Sub", 2)
     calibrate_board_for_ships(@cpu_ship_1.length, @cpu_ship_2.length)
+    create_valid_cells
     cpu_first_placement(@cpu_ship_1, @cpu_ship_1.length)
-    cpu_first_placement(@cpu_ship_2, @cpu_ship_2.length)
+    cpu_second_placement(@cpu_ship_2, @cpu_ship_2.length)
     initial_game_instructions
     player_first_placement(@player_ship_1)
     second_placement_instructions
@@ -195,14 +198,19 @@ class Starter
     until game_over? do
       print_boards
       player_shot
-      cpu_shot
-      if game_over?
-        if player_wins
-          puts "You won!"
-        else
-          puts "I won!"
-        end
+      if game_over? && player_wins
+        print_boards
+        puts "You won!"
+        break
       end
+      cpu_shot
+      if game_over? && cpu_wins
+        print_boards
+        puts "I won!"
+        break
+      end
+      # unless player_wins || cpu_wins
+      # if game_over? && player_wins
     end
   end
 
