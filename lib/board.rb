@@ -2,7 +2,7 @@ require "pry"
 require "./lib/cell"
 
 class Board
-  attr_reader :cells, :valid_ship_coordinates, :valid_squares
+  attr_reader :cells, :valid_ship_coordinates
   def initialize(board_size = 4)
     @cells = {
       "A1" => Cell.new("A1"),
@@ -28,7 +28,10 @@ class Board
     @valid_number_coordinates = []
     @valid_letter_coordinates = []
     @valid_ship_coordinates = []
-    @valid_paces = @valid_ship_coordinates.flatten.uniq
+  end
+
+  def valid_cells
+    @valid_ship_coordinates.flatten.uniq!
   end
 
   def valid_coordinate?(coordinate)
