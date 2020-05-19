@@ -23,7 +23,7 @@ class Cell
     @fired_upon
   end
 
-  def render()
+  def render
     if fired_upon? && @render == "H" && @ship.health == 0
       @render = "X"
     elsif fired_upon? && @render == "S" && @ship.sunk?
