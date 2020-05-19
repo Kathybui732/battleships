@@ -30,10 +30,6 @@ class Board
     @valid_ship_coordinates = []
   end
 
-  def valid_cells
-    @valid_ship_coordinates.flatten.uniq!
-  end
-
   def valid_coordinate?(coordinate)
     @cells.include?(coordinate)
   end
