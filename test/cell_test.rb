@@ -39,7 +39,6 @@ class CellTest < Minitest::Test
   end
 
   def test_it_can_fire_upon
-    #binding.pry
     @cell.place_ship(@cruiser)
     @cell.fire_upon
     assert_equal 2, @cell.ship.health
@@ -55,9 +54,7 @@ class CellTest < Minitest::Test
     assert_equal "M", @cell.render
   end
 
-  # Need to go back to optional boolean!!!
   def test_it_can_place_another_ship
-    #binding.pry
     @cell_2.place_ship(@cruiser)
     assert_equal ".", @cell_2.render
     assert_equal "S", @cell_2.render(true)
