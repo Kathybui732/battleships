@@ -121,9 +121,12 @@ class BoardTest < Minitest::Test
     cell_3.ship
     assert_equal true, cell_3.ship == cell_2.ship
     assert_equal false, cell_3.ship == cell_4.ship
-    assert_equal "S", cell_3.render
-    assert_equal "S", cell_2.render
-    assert_equal "S", cell_3.render
+    assert_equal ".", cell_3.render
+    assert_equal ".", cell_2.render
+    assert_equal ".", cell_3.render
+    assert_equal "S", cell_3.render(true)
+    assert_equal "S", cell_2.render(true)
+    assert_equal "S", cell_3.render(true)
     assert_equal ".", cell_4.render
     assert_equal false, cell_3.empty?
     assert_equal false, cell_2.empty?
@@ -160,6 +163,7 @@ class BoardTest < Minitest::Test
   def test_it_can_render_board
     assert_equal "  1 2 3 4 \nA . . . . \nB . . . . \nC . . . . \nD . . . . \n", @board.render
     @board.place(@cruiser, ["A1", "A2", "A3"])
-    assert_equal "  1 2 3 4 \nA S S S . \nB . . . . \nC . . . . \nD . . . . \n", @board.render
+    assert_equal "  1 2 3 4 \nA . . . . \nB . . . . \nC . . . . \nD . . . . \n", @board.render
+    assert_equal "  1 2 3 4 \nA S S S . \nB . . . . \nC . . . . \nD . . . . \n", @board.render(true)
   end
 end

@@ -14,7 +14,7 @@ class Cell
   end
 
   def place_ship(placed_ship)
-    @render = "S"
+    @render
     @empty = false
     @ship = placed_ship
   end
@@ -23,14 +23,16 @@ class Cell
     @fired_upon
   end
 
-  def render
-    if fired_upon? && @render == "H" && @ship.health == 0
+  def render(show_ship = false)
+    if show_ship == true && @empty == false
+      @render = "S"
+    elsif fired_upon? && @render == "H" && @ship.health == 0
       @render = "X"
-    elsif fired_upon? && @render == "S" && @ship.sunk?
+    elsif fired_upon? && @empty == false && @ship.sunk?
       @render = "X"
-    elsif fired_upon? && @render == "S"
+    elsif fired_upon? && @empty == false
       @render = "H"
-    elsif fired_upon? && @render == "."
+    elsif fired_upon? && @empty == true
       @render = "M"
     else
       @render
@@ -39,6 +41,6 @@ class Cell
 
   def fire_upon
     @fired_upon = true
-    @ship.hit if @render == "S"
+    @ship.hit if @empty == false
   end
 end
