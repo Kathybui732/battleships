@@ -24,23 +24,35 @@ class Cell
   end
 
   def render(show_ship = false)
-    if show_ship == true && @empty == false
-      @render = "S"
-    elsif fired_upon? && @render == "H" && @ship.health == 0
-      @render = "X"
-    elsif fired_upon? && @empty == false && @ship.sunk?
-      @render = "X"
-    elsif fired_upon? && @empty == false
-      @render = "H"
-    elsif fired_upon? && @empty == true
-      @render = "M"
+    if show_ship == true
+      if @empty == false && @ship.sunk? && fired_upon?
+        @render = "X"
+      elsif @empty == false && fired_upon?
+        @render = "H"
+      elsif @empty == false
+        @render = "S"
+      elsif @empty == true && fired_upon?
+        @render = "M"
+      else
+        @render
+      end
     else
-      @render
+      if @empty == false && @ship.sunk? && fired_upon?
+        @render = "X"
+      elsif @empty == false && fired_upon?
+        @render = "H"
+      elsif @empty == true && fired_upon?
+        @render = "M"
+      else
+        @render
+      end
     end
   end
 
   def fire_upon
-    @fired_upon = true
-    @ship.hit if @empty == false
+    if !fired_upon?
+      @fired_upon = true
+      @ship.hit if @empty == false
+    end
   end
 end
