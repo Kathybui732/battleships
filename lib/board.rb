@@ -2,7 +2,7 @@ require "pry"
 require "./lib/cell"
 
 class Board
-  attr_reader :cells, :ship_length, :input_coords, :valid_ship_coordinates
+  attr_reader :cells, :valid_ship_coordinates, :valid_squares
   def initialize(board_size = 4)
     @cells = {
       "A1" => Cell.new("A1"),
@@ -28,14 +28,11 @@ class Board
     @valid_number_coordinates = []
     @valid_letter_coordinates = []
     @valid_ship_coordinates = []
+    @valid_paces = @valid_ship_coordinates.flatten.uniq
   end
 
   def valid_coordinate?(coordinate)
     @cells.include?(coordinate)
-  end
-
-  def create_ship(name, length)
-    @ship_length = length
   end
 
   def valid_placement?(ship, coordinates)
@@ -52,15 +49,10 @@ class Board
 
   def number_coordinates
     coordinates = []
-    (1..@board_size).each_cons(@ship_length)do |array|
-      coordinates << array
+    ("1"..@board_size.to_s).each_cons(@ship_length)do |array|
+      @valid_number_coordinates << array
     end
-    coordinates.each do |array|
-      @valid_number_coordinates << array.map do |number|
-        number.to_s
-      end
-    end
-    @valid_number_coordinates
+    @valid_number_coordinates.uniq!
   end
 
   def letter_coordinates
@@ -68,10 +60,13 @@ class Board
     ("A"..letter_ord).each_cons(@ship_length) do |letter|
       @valid_letter_coordinates << letter
     end
-    @valid_letter_coordinates
+    @valid_letter_coordinates.uniq!
   end
 
-  def ship_coordinates
+  def ship_coordinates(length)
+    @ship_length = length
+    number_coordinates
+    letter_coordinates
     letter_ord = (64 + @board_size).chr
     letters = ("A"..letter_ord).to_a.zip
     numbers = ("1"..@board_size.to_s).to_a.zip
@@ -85,7 +80,7 @@ class Board
         @valid_ship_coordinates << array.product(number).collect { |x,y| x + y }
       end
     end
-    return @valid_ship_coordinates
+    return @valid_ship_coordinates.uniq!
   end
 
   def place(ship, coordinates)
