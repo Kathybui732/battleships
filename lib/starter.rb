@@ -96,7 +96,7 @@ class Starter
       end
     end
     @placement_2 = second_placement.select do |coords|
-      coords.count == 2
+      coords.count == length
     end.sample(1).flatten!
     @cpu_board.place(ship, @placement_2)
   end
@@ -115,17 +115,17 @@ class Starter
     puts "=============COMPUTER BOARD============="
     puts @cpu_board.render
     puts "==============PLAYER BOARD=============="
-    puts @player_board.render(true)
+    puts @player_board.render
   end
 
   def player_shot
     print "Enter the coordinate for your shot: "
-    player_shot = gets.chompx.upcase
-    if !@player_board.valid_squares.include?(player_shot)
-      print "Please enter a valid coordinate: "
+    player_shot = gets.chomp.upcase
+    if @cpu_board.valid_cells.include?(player_shot) == false
+      puts "Please enter a valid coordinate: "
     elsif @cpu_board.cells[player_shot].fired_upon?
       puts "Already fired upon this space. Choose another one:"
-    elsif @player_board.valid_squares.include?(player_shot)
+    elsif @cpu_board.valid_cells.include?(player_shot)
       @cpu_board.cells[player_shot].fire_upon
       if @cpu_board.cells[player_shot].render == "X"
         puts "Your shot on #{player_shot} was a hit. Ship sunk."
@@ -138,13 +138,13 @@ class Starter
   end
 
   def cpu_shot
-    spaces = @cpu_board.valid_spaces
-    shot = spaces.sample(1).flatten!
+    spaces = @player_board.valid_cells
+    shot = spaces.sample(1).shift
     spaces.delete(shot)
-    @cpu_board.cells[shot].fire_upon
+    @player_board.cells[shot].fire_upon
     if @player_board.cells[shot].render == "X"
       puts "My shot on #{shot} was a hit. Ship sunk."
-    elsif @cpu_board.cells[player_shot].render == "H"
+    elsif @player_board.cells[shot].render == "H"
       puts "My shot on #{shot} was a hit."
     else
       puts "My shot on #{shot} was a miss."
@@ -153,7 +153,7 @@ class Starter
 
   def play_game
     create_ship_1("Cruiser", 3)
-    create_ship_2("Sub", 3)
+    create_ship_2("Sub", 2)
     calibrate_board_for_ships(@cpu_ship_1.length, @cpu_ship_2.length)
     cpu_first_placement(@cpu_ship_1, @cpu_ship_1.length)
     cpu_first_placement(@cpu_ship_2, @cpu_ship_2.length)
