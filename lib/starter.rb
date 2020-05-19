@@ -17,6 +17,8 @@ class Starter
     @cpu_ship_2 = nil
     @player_ship_1 = nil
     @player_ship_2 = nil
+    @valid_player_cells = nil
+    @valid_cells = nil
   end
 
   def start
@@ -52,7 +54,7 @@ class Starter
     end
     if @player_board.valid_placement?(ship, first_placement)
       @player_board.place(ship, first_placement)
-      puts @player_board.render
+      puts @player_board.render(true)
     end
   end
 
@@ -70,7 +72,7 @@ class Starter
     end
     if @player_board.valid_placement?(ship, second_placement)
       @player_board.place(ship, second_placement)
-      puts @player_board.render
+      puts @player_board.render(true)
     end
   end
 
@@ -79,6 +81,8 @@ class Starter
     @cpu_board.ship_coordinates(length_2)
     @player_board.ship_coordinates(length_1)
     @player_board.ship_coordinates(length_2)
+    @valid_player_cells = @player_board.valid_ship_coordinates.flatten.uniq!
+    @valid_cells = @cpu_board.valid_ship_coordinates.flatten.uniq!
   end
 
   def cpu_first_placement(ship, length)
@@ -115,32 +119,54 @@ class Starter
     puts "=============COMPUTER BOARD============="
     puts @cpu_board.render
     puts "==============PLAYER BOARD=============="
-    puts @player_board.render
+    puts @player_board.render(true)
   end
 
   def player_shot
+    # print "Enter the coordinate for your shot: "
+    # player_shot = gets.chomp.upcase
+    # if @cpu_board.cells[player_shot].fired_upon?
+    #   puts "Already fired upon this space. Counts as miss."
+    # elsif @valid_cells.include?(player_shot)
+    #   @cpu_board.cells[player_shot].fire_upon
+    #   if @cpu_board.cells[player_shot].render == "X"
+    #     puts "Your shot on #{player_shot} was a hit. Ship sunk."
+    #   elsif @cpu_board.cells[player_shot].render == "H"
+    #     puts "Your shot on #{player_shot} was a hit"
+    #   else
+    #     puts "Your shot on #{player_shot} was a miss."
+    #   end
+    # elsif @valid_cells.include?(player_shot)
+    #   puts "Please enter a valid coordinate: "
+    #   player_shot = gets.chomp.upcase
+    #   end
+    # end
+
     print "Enter the coordinate for your shot: "
     player_shot = gets.chomp.upcase
-    if @cpu_board.valid_cells.include?(player_shot) == false
+    until @valid_cells.include?(player_shot) do
       puts "Please enter a valid coordinate: "
-    elsif @cpu_board.cells[player_shot].fired_upon?
-      puts "Already fired upon this space. Choose another one:"
-    elsif @cpu_board.valid_cells.include?(player_shot)
-      @cpu_board.cells[player_shot].fire_upon
-      if @cpu_board.cells[player_shot].render == "X"
-        puts "Your shot on #{player_shot} was a hit. Ship sunk."
-      elsif @cpu_board.cells[player_shot].render == "H"
-        puts "Your shot on #{player_shot} was a hit"
+      player_shot = gets.chomp.upcase
+    end
+    if @valid_cells.include?(player_shot)
+      if @cpu_board.cells[player_shot].fired_upon?
+        puts "Already fired upon this space. Lose a turn."
       else
-        puts "Your shot on #{player_shot} was a miss."
+        @cpu_board.cells[player_shot].fire_upon
+        if @cpu_board.cells[player_shot].render == "X"
+          puts "Your shot on #{player_shot} was a hit. Ship sunk."
+        elsif @cpu_board.cells[player_shot].render == "H"
+          puts "Your shot on #{player_shot} was a hit"
+        else
+          puts "Your shot on #{player_shot} was a miss."
+        end
       end
     end
   end
 
   def cpu_shot
-    spaces = @player_board.valid_cells
-    shot = spaces.sample(1).shift
-    spaces.delete(shot)
+    shot = @valid_player_cells.sample(1).shift
+    @valid_player_cells.delete(shot)
     @player_board.cells[shot].fire_upon
     if @player_board.cells[shot].render == "X"
       puts "My shot on #{shot} was a hit. Ship sunk."
