@@ -128,11 +128,4 @@ class BoardTest < Minitest::Test
     assert_equal "  1 2 3 4 \nA . . . . \nB . . . . \nC . . . . \nD . . . . \n", @board.render
     assert_equal "  1 2 3 4 \nA S S S . \nB . . . . \nC . . . . \nD . . . . \n", @board.render(true)
   end
-
-  def test_it_can_generate_valid_cells
-    @board.ship_coordinates(3)
-    @board.ship_coordinates(2)
-    expected = ["A1", "A2", "A3", "A4", "B1", "B2", "B3", "B4", "C1", "C2", "C3", "C4", "D1", "D2", "D3", "D4"]
-    assert_equal expected, @board.valid_cells
-  end
 end
