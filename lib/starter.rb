@@ -29,10 +29,65 @@ class Starter
     if start_game == "p"
       play_game
     elsif start_game == "c"
-      puts "custom game"
+      puts "custom game coming soon!"
     elsif start_game == "q"
       puts "game over!"
     end
+  end
+
+  def play_game
+    create_ship_1("Cruiser", 3)
+    create_ship_2("Sub", 2)
+    calibrate_board_for_ships(@cpu_ship_1.length, @cpu_ship_2.length)
+    create_valid_cells
+    cpu_first_placement(@cpu_ship_1, @cpu_ship_1.length)
+    cpu_second_placement(@cpu_ship_2, @cpu_ship_2.length)
+    initial_game_instructions
+    player_first_placement(@player_ship_1)
+    second_placement_instructions
+    player_second_placement(@player_ship_2)
+    puts "LET'S PLAY!!!"
+    turn
+  end
+
+  def create_ship_1(name, length)
+    @player_ship_1 = Ship.new("#{name.capitalize}", length)
+    @cpu_ship_1 = Ship.new("#{name.capitalize}", length)
+  end
+
+  def create_ship_2(name, length)
+    @player_ship_2 = Ship.new("#{name.capitalize}", length)
+    @cpu_ship_2 = Ship.new("#{name.capitalize}", length)
+  end
+
+  def calibrate_board_for_ships(length_1, length_2)
+    @cpu_board.ship_coordinates(length_1)
+    @cpu_board.ship_coordinates(length_2)
+    @player_board.ship_coordinates(length_1)
+    @player_board.ship_coordinates(length_2)
+  end
+
+  def create_valid_cells
+    @valid_player_cells = @player_board.valid_ship_coordinates.flatten.uniq!
+    @valid_cells = @cpu_board.valid_ship_coordinates.flatten.uniq!
+  end
+
+  def cpu_first_placement(ship, length)
+    first_placement = @cpu_board.valid_ship_coordinates.select do |array|
+      array.count == length
+    end
+    @placement_1 = first_placement.sample(1).flatten!
+    @cpu_board.place(ship, @placement_1)
+  end
+
+  def cpu_second_placement(ship, length)
+    second_placement = @cpu_board.valid_ship_coordinates.select do |array|
+      array.count == length
+    end
+    @placement_2  = second_placement.select do |array|
+      @cpu_board.cells[array[0]].empty? && @cpu_board.cells[array[1]].empty?
+    end.sample(1).flatten!
+    @cpu_board.place(ship, @placement_2)
   end
 
   def initial_game_instructions
@@ -76,74 +131,14 @@ class Starter
     end
   end
 
-  def calibrate_board_for_ships(length_1, length_2)
-    @cpu_board.ship_coordinates(length_1)
-    @cpu_board.ship_coordinates(length_2)
-    @player_board.ship_coordinates(length_1)
-    @player_board.ship_coordinates(length_2)
-  end
-
-  def create_valid_cells
-    @valid_player_cells = @player_board.valid_ship_coordinates.flatten.uniq!
-    @valid_cells = @cpu_board.valid_ship_coordinates.flatten.uniq!
-  end
-
-  def cpu_first_placement(ship, length)
-    first_placement = @cpu_board.valid_ship_coordinates.select do |array|
-      array.count == length
-    end
-    @placement_1 = first_placement.sample(1).flatten!
-    @cpu_board.place(ship, @placement_1)
-  end
-
-  def cpu_second_placement(ship, length)
-    size_array = @cpu_board.valid_ship_coordinates.select do |array|
-      array.count == length
-    end
-    valid_placement = size_array.select do |array|
-      array.length == 2 && @cpu_board.cells[array[0]].empty? && @cpu_board.cells[array[1]]
-    end
-    @placement_2 = valid_placement.sample(1).flatten!
-    @cpu_board.place(ship, @placement_2)
-  end
-
-  def create_ship_1(name, length)
-    @player_ship_1 = Ship.new("#{name.capitalize}", length)
-    @cpu_ship_1 = Ship.new("#{name.capitalize}", length)
-  end
-
-  def create_ship_2(name, length)
-    @player_ship_2 = Ship.new("#{name.capitalize}", length)
-    @cpu_ship_2 = Ship.new("#{name.capitalize}", length)
-  end
-
   def print_boards
     puts "=============COMPUTER BOARD============="
-    puts @cpu_board.render(true)
+    puts @cpu_board.render
     puts "==============PLAYER BOARD=============="
     puts @player_board.render(true)
   end
 
   def player_shot
-    # print "Enter the coordinate for your shot: "
-    # player_shot = gets.chomp.upcase
-    # if @cpu_board.cells[player_shot].fired_upon?
-    #   puts "Already fired upon this space. Counts as miss."
-    # elsif @valid_cells.include?(player_shot)
-    #   @cpu_board.cells[player_shot].fire_upon
-    #   if @cpu_board.cells[player_shot].render == "X"
-    #     puts "Your shot on #{player_shot} was a hit. Ship sunk."
-    #   elsif @cpu_board.cells[player_shot].render == "H"
-    #     puts "Your shot on #{player_shot} was a hit"
-    #   else
-    #     puts "Your shot on #{player_shot} was a miss."
-    #   end
-    # elsif @valid_cells.include?(player_shot)
-    #   puts "Please enter a valid coordinate: "
-    #   player_shot = gets.chomp.upcase
-    #   end
-    # end
-
     print "Enter the coordinate for your shot: "
     player_shot = gets.chomp.upcase
     until @valid_cells.include?(player_shot) do
@@ -179,21 +174,6 @@ class Starter
     end
   end
 
-  def play_game
-    create_ship_1("Cruiser", 3)
-    create_ship_2("Sub", 2)
-    calibrate_board_for_ships(@cpu_ship_1.length, @cpu_ship_2.length)
-    create_valid_cells
-    cpu_first_placement(@cpu_ship_1, @cpu_ship_1.length)
-    cpu_second_placement(@cpu_ship_2, @cpu_ship_2.length)
-    initial_game_instructions
-    player_first_placement(@player_ship_1)
-    second_placement_instructions
-    player_second_placement(@player_ship_2)
-    puts "LET'S PLAY!!!"
-    turn
-  end
-
   def turn
     until game_over? do
       print_boards
@@ -209,8 +189,6 @@ class Starter
         puts "I won!"
         break
       end
-      # unless player_wins || cpu_wins
-      # if game_over? && player_wins
     end
   end
 

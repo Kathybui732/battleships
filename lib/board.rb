@@ -20,7 +20,7 @@ class Board
       "D1" => Cell.new("D1"),
       "D2" => Cell.new("D2"),
       "D3" => Cell.new("D3"),
-      "D4" => Cell.new("D4"),
+      "D4" => Cell.new("D4")
     }
     @board_size = board_size
     @ship_length = nil
@@ -36,19 +36,23 @@ class Board
 
   def valid_placement?(ship, coordinates)
     @input_coords = coordinates
-
-    def input_coordinates_empty?
-      @input_coords.all? do |coordinate|
-        @cells[coordinate].empty?
-      end
-    end
-
     coordinates.length == ship.length && is_valid? && input_coordinates_empty?
   end
 
+  def input_coordinates_empty?
+    @input_coords.all? do |coordinate|
+      @cells[coordinate].empty?
+    end
+  end
+
+  def is_valid?
+    @valid_ship_coordinates.any? do |coords|
+      coords == @input_coords
+    end
+  end
+
   def number_coordinates
-    coordinates = []
-    ("1"..@board_size.to_s).each_cons(@ship_length)do |array|
+    ("1"..@board_size.to_s).each_cons(@ship_length) do |array|
       @valid_number_coordinates << array
     end
     @valid_number_coordinates.uniq!
@@ -79,18 +83,12 @@ class Board
         @valid_ship_coordinates << array.product(number).collect { |x,y| x + y }
       end
     end
-    return @valid_ship_coordinates.uniq!
+    @valid_ship_coordinates.uniq!
   end
 
   def place(ship, coordinates)
     coordinates.each do |cell|
       @cells[cell].place_ship(ship)
-    end
-  end
-
-  def is_valid?
-    @valid_ship_coordinates.any? do |coords|
-      coords == @input_coords
     end
   end
 

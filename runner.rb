@@ -7,8 +7,6 @@ require 'pry'
 player_board = Board.new
 cpu_board = Board.new
 battleship = Starter.new(cpu_board, player_board)
-cruiser = Ship.new("cru", 3)
-sub = Ship.new("sub", 2)
 
 battleship.start
 #
