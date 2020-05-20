@@ -21,10 +21,14 @@ class Starter
     @valid_cells = nil
   end
 
+  def user_input
+    gets.chomp
+  end
+
   def start
     puts "Welcome to BATTLESHIP"
     puts "Enter p to play. Enter q to quit."
-    start_game = gets.chomp.downcase
+    start_game = user_input.downcase
 
     if start_game == "p"
       play_game
@@ -101,11 +105,11 @@ class Starter
   end
 
   def player_first_placement(ship)
-    first_placement = gets.chomp.upcase.split(" ")
+    first_placement = user_input.upcase.split(" ")
     until @player_board.valid_placement?(ship, first_placement) do
       puts "Those are invalid coordinates. Please try again:"
       print "=> "
-      first_placement = gets.chomp.upcase.split(" ")
+      first_placement = user_input.upcase.split(" ")
     end
     if @player_board.valid_placement?(ship, first_placement)
       @player_board.place(ship, first_placement)
@@ -119,11 +123,11 @@ class Starter
   end
 
   def player_second_placement(ship)
-    second_placement = gets.chomp.upcase.split(" ")
+    second_placement = user_input.upcase.split(" ")
     until @player_board.valid_placement?(ship, second_placement) do
       puts "Those are invalid coordinates. Please try again:"
       print "=> "
-      second_placement = gets.chomp.upcase.split(" ")
+      second_placement = user_input.upcase.split(" ")
     end
     if @player_board.valid_placement?(ship, second_placement)
       @player_board.place(ship, second_placement)
@@ -140,10 +144,10 @@ class Starter
 
   def player_shot
     print "Enter the coordinate for your shot: "
-    player_shot = gets.chomp.upcase
+    player_shot = user_input.upcase
     until @valid_cells.include?(player_shot) do
       puts "Please enter a valid coordinate: "
-      player_shot = gets.chomp.upcase
+      player_shot = user_input.upcase
     end
     if @valid_cells.include?(player_shot)
       if @cpu_board.cells[player_shot].fired_upon?
