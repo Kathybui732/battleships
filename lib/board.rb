@@ -108,4 +108,17 @@ class Board
       "D #{cells["D1"].render} #{cells["D2"].render} #{cells["D3"].render} #{cells["D4"].render} \n"
     end
   end
+
+  def create_cells(size)
+    letter_ord = (64 + size).chr
+    letters = ("A"..letter_ord).to_a
+    numbers = ("1"..size.to_s).to_a
+    custom_cell = letters.product(numbers).map { |x, y| x+y }
+
+    @cells = Hash.new
+    custom_cell.each do |cell|
+      @cells[cell] = Cell.new(cell)
+    end
+    @cells
+  end
 end
