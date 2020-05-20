@@ -49,4 +49,9 @@ class StarterTest < Minitest::Test
     assert_instance_of Ship, @start_game.cpu_ship_2
   end
 
+  def test_it_can_create_valid_cells
+    @start_game.calibrate_board_for_ships(3, 2)
+    expected = ["A1", "A2", "A3", "A4", "B1", "B2", "B3", "B4", "C1", "C2", "C3", "C4", "D1", "D2", "D3", "D4"]
+    assert_equal expected, @start_game.create_valid_cells
+  end
 end
