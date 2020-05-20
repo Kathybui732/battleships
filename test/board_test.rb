@@ -10,6 +10,7 @@ class BoardTest < Minitest::Test
     @board = Board.new
     @cruiser = Ship.new("Cruiser", 3)
     @sub = Ship.new("Submarine", 2)
+    @custom_board = Board.new
   end
 
   def test_it_exists
@@ -154,10 +155,10 @@ class BoardTest < Minitest::Test
   end
 
   def test_custom_board
-    @custom_game.create_custom_board(7)
-    assert_equal Hash, @custom_game.cpu_board.cells.class
-    assert_equal 49, @custom_game.cpu_board.cells.count
-    assert_equal "G7", @custom_game.cpu_board.cells["G7"].coordinate
-    assert_instance_of Cell, @custom_game.cpu_board.cells["G7"]
+    @custom_board.create_cells(7)
+    assert_equal Hash, @custom_board.cells.class
+    assert_equal 49, @custom_board.cells.count
+    assert_equal "G7", @custom_board.cells["G7"].coordinate
+    assert_instance_of Cell, @custom_board.cells["G7"]
   end
 end
