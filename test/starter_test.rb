@@ -1,5 +1,6 @@
 require "minitest/autorun"
 require "minitest/pride"
+require "mocha/minitest"
 require "./lib/board"
 require "./lib/ship"
 require "./lib/cell"
@@ -53,5 +54,28 @@ class StarterTest < Minitest::Test
     @start_game.calibrate_board_for_ships(3, 2)
     expected = ["A1", "A2", "A3", "A4", "B1", "B2", "B3", "B4", "C1", "C2", "C3", "C4", "D1", "D2", "D3", "D4"]
     assert_equal expected, @start_game.create_valid_cells
+  end
+
+  def test_user_input
+    start_game = mock("Starter")
+    start_game.expects(:user_input).returns("p")
+
+    assert_equal "p", start_game.user_input
+  end
+
+  def test_player_first_placement
+    start_game = mock("Starter")
+    start_game.expects(:player_first_placement).returns("  1 2 3 4 \nA . . . . \nB . . . . \nC . . . . \nD . . . . \n")
+
+    expected = "  1 2 3 4 \nA . . . . \nB . . . . \nC . . . . \nD . . . . \n"
+    assert_equal expected, start_game.player_first_placement(@sub)
+  end
+
+  def test_player_first_placement_true
+    start_game = mock("Starter")
+    start_game.expects(:player_first_placement).returns("  1 2 3 4 \nA S S S . \nB . . . . \nC . . . . \nD . . . . \n")
+
+    expected = "  1 2 3 4 \nA S S S . \nB . . . . \nC . . . . \nD . . . . \n"
+    assert_equal expected, start_game.player_first_placement(@sub)
   end
 end

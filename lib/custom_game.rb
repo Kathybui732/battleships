@@ -1,4 +1,4 @@
-class Starter
+class CustomGame
   attr_reader :cpu_board,
               :player_board,
               :placement_1,
@@ -8,7 +8,7 @@ class Starter
               :player_ship_1,
               :player_ship_2
 
-  def initialize(cpu_board, player_board)
+  def initialize
     @cpu_board = cpu_board
     @player_board = player_board
     @placement_1 = nil
@@ -27,19 +27,36 @@ class Starter
 
   def start
     puts "Welcome to BATTLESHIP"
-    puts "Enter p to play. Enter q to quit."
+    puts "Enter p to play. Enter c to play custom game. Enter q to quit."
     start_game = user_input.downcase
 
     if start_game == "p"
       play_game
     elsif start_game == "c"
-      puts "custom game coming soon!"
+      play_custom_game
     elsif start_game == "q"
       puts "game over!"
     end
   end
 
   def play_game
+    create_custom_board(4)
+    create_ship_1("Cruiser", 3)
+    create_ship_2("Sub", 2)
+    calibrate_board_for_ships(@cpu_ship_1.length, @cpu_ship_2.length)
+    create_valid_cells
+    cpu_first_placement(@cpu_ship_1, @cpu_ship_1.length)
+    cpu_second_placement(@cpu_ship_2, @cpu_ship_2.length)
+    initial_game_instructions
+    player_first_placement(@player_ship_1)
+    second_placement_instructions
+    player_second_placement(@player_ship_2)
+    puts "LET'S PLAY!!!"
+    turn
+  end
+
+  def play_custom_game
+    custom_game_instructions
     create_ship_1("Cruiser", 3)
     create_ship_2("Sub", 2)
     calibrate_board_for_ships(@cpu_ship_1.length, @cpu_ship_2.length)
@@ -206,5 +223,20 @@ class Starter
 
   def game_over?
     player_wins || cpu_wins
+  end
+
+  def create_custom_board(size)
+    @cpu_board = Board.new(size)
+    @player_board = Board.new(size)
+
+    @cpu_board.create_cells(size)
+    @player_board.create_cells(size)
+  end
+
+  def custom_game_instructions
+    puts "Please choose board size: "
+    board_size = user_input.to_i
+
+    create_custom_board(board_size)
   end
 end

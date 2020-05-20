@@ -10,6 +10,7 @@ class BoardTest < Minitest::Test
     @board = Board.new
     @cruiser = Ship.new("Cruiser", 3)
     @sub = Ship.new("Submarine", 2)
+    @custom_board = Board.new
   end
 
   def test_it_exists
@@ -19,6 +20,8 @@ class BoardTest < Minitest::Test
   def test_board_has_cells
     assert_equal Hash, @board.cells.class
     assert_equal 16, @board.cells.count
+    assert_equal "A1", @board.cells["A1"].coordinate
+    assert_instance_of Cell, @board.cells["A1"]
   end
 
   def test_is_has_valid_coordinate?
@@ -149,5 +152,13 @@ class BoardTest < Minitest::Test
     @board.place(@cruiser, ["A1", "A2", "A3"])
     assert_equal "  1 2 3 4 \nA . . . . \nB . . . . \nC . . . . \nD . . . . \n", @board.render
     assert_equal "  1 2 3 4 \nA S S S . \nB . . . . \nC . . . . \nD . . . . \n", @board.render(true)
+  end
+
+  def test_custom_board
+    @custom_board.create_cells(7)
+    assert_equal Hash, @custom_board.cells.class
+    assert_equal 49, @custom_board.cells.count
+    assert_equal "G7", @custom_board.cells["G7"].coordinate
+    assert_instance_of Cell, @custom_board.cells["G7"]
   end
 end
