@@ -32,14 +32,15 @@ class Cell
     if show_ship == true
       if !empty? && @ship.sunk? && fired_upon?
         "X"
-      elsif !empty? && fire_upon?
+      elsif !empty? && fired_upon?
         "H"
-      elsif !empty
+      elsif !empty?
         "S"
-      elsif empty? && fire_upon
+      elsif empty? && fired_upon?
         "M"
       else
         "."
+      end
     else
       if !empty? && @ship.sunk? && fired_upon?
         "X"
