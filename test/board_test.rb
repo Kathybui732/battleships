@@ -21,12 +21,33 @@ class BoardTest < Minitest::Test
     assert_equal 16, @board.cells.count
   end
 
-  def test_is_has_valid_coordinate
+  def test_is_has_valid_coordinate?
     assert_equal true, @board.valid_coordinate?("A1")
     assert_equal true, @board.valid_coordinate?("D4")
     assert_equal false, @board.valid_coordinate?("A5")
     assert_equal false, @board.valid_coordinate?("E1")
     assert_equal false, @board.valid_coordinate?("A22")
+  end
+
+  def test_input_coordinates_empty_is_true
+    @board.valid_placement?(@sub, ["D2", "D3"])
+    assert_equal true, @board.input_coordinates_empty?
+  end
+
+  def test_input_coordinates_empty_is_false
+    @board.valid_placement?(@sub, ["B1", "C1"])
+    @board.place(@sub, ["B1", "C1"])
+    assert_equal false, @board.input_coordinates_empty?
+  end
+
+  def test_is_valid?
+    @board.valid_placement?(@cruiser, ["D1", "D2", "D3"])
+    @board.ship_coordinates(3)
+    assert_equal true, @board.is_valid?
+
+    @board.valid_placement?(@cruiser, ["B1", "C2", "D3"])
+    @board.ship_coordinates(3)
+    assert_equal false, @board.is_valid?
   end
 
   def test_it_has_valid_coordinate_length
@@ -49,6 +70,15 @@ class BoardTest < Minitest::Test
     assert_equal true, @board.valid_placement?(@cruiser, ["C1", "C2", "C3"])
     assert_equal false, @board.valid_placement?(@cruiser, ["A1", "B2", "C3"])
     assert_equal false, @board.valid_placement?(@sub, ["C2", "D3"])
+  end
+
+  def test_second_ship_valid_placement_no_overlapping
+    @board.ship_coordinates(3)
+    @board.ship_coordinates(2)
+    assert_equal true, @board.valid_placement?(@cruiser, ["A1", "A2", "A3"])
+    @board.place(@cruiser, ["A1", "A2", "A3"])
+    assert_equal false, @board.valid_placement?(@sub, ["A1", "B1"])
+    assert_equal true, @board.valid_placement?(@sub, ["C1", "D1"])
   end
 
   def test_valid_number_coordinates_for_cruiser
@@ -113,26 +143,11 @@ class BoardTest < Minitest::Test
     assert_equal true, cell_4.empty?
   end
 
-  def test_second_ship_valid_placement
-    @board.ship_coordinates(3)
-    @board.ship_coordinates(2)
-    assert_equal true, @board.valid_placement?(@cruiser, ["A1", "A2", "A3"])
-    @board.place(@cruiser, ["A1", "A2", "A3"])
-    assert_equal false, @board.valid_placement?(@sub, ["A1", "B1"])
-    assert_equal true, @board.valid_placement?(@sub, ["C1", "D1"])
-  end
 
   def test_it_can_render_board
     assert_equal "  1 2 3 4 \nA . . . . \nB . . . . \nC . . . . \nD . . . . \n", @board.render
     @board.place(@cruiser, ["A1", "A2", "A3"])
     assert_equal "  1 2 3 4 \nA . . . . \nB . . . . \nC . . . . \nD . . . . \n", @board.render
     assert_equal "  1 2 3 4 \nA S S S . \nB . . . . \nC . . . . \nD . . . . \n", @board.render(true)
-  end
-
-  def test_it_can_generate_valid_cells
-    @board.ship_coordinates(3)
-    @board.ship_coordinates(2)
-    expected = ["A1", "A2", "A3", "A4", "B1", "B2", "B3", "B4", "C1", "C2", "C3", "C4", "D1", "D2", "D3", "D4"]
-    assert_equal expected, @board.valid_cells
   end
 end
